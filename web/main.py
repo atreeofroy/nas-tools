@@ -1126,6 +1126,8 @@ def create_flask_app():
         PageNum = request.args.get("pagenum")
         if not PageNum:
             PageNum = 30
+        else:
+            PageNum = int(PageNum)
         SearchStr = request.args.get("s")
         if not SearchStr:
             SearchStr = ""
