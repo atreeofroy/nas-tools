@@ -171,10 +171,12 @@
           </div>
           {% if TotalCount > 0 %}
           <div class="card-footer d-flex align-items-center">
-            <p class="m-0 text-muted">当前页 <span>{{ Count }}</span> 条</p>
+            <p class="m-0 text-muted">当前页 <span>
+		        <input type="text" id="pagenum" width="10" value="{{ pagenum }}">
+		        </span> 条</p>
             <ul class="pagination m-0 ms-auto">
               <li class="page-item {% if CurrentPage==1 %} disabled {% endif %}">
-                <a class="page-link" href="javascript:go_pre_page('{{ Search }}', {{ CurrentPage }})" tabindex="-1"
+                <a class="page-link" href="javascript:go_pre_page('{{ Count }}','{{ Search }}', {{ CurrentPage }})" tabindex="-1"
                   aria-disabled="true">
                   <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24"
                     stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
@@ -185,12 +187,32 @@
               </li>
               {% for page in PageRange %}
               <li class="page-item {% if page==CurrentPage %} active {% endif %}">
-                <a class="page-link" href="javascript:navmenu('history?s={{ Search }}&page={{ page }}')">{{ page }}</a>
+                <a class="page-link" href="javascript:navmenu('history?pagenum={{ Count }}&s={{ Search }}&page={{ page }}')">{{ page }}</a>
               </li>
               {% endfor %}
               <li class="page-item {% if CurrentPage >= TotalPage %} disabled {% endif %}">
                 <a class="page-link"
-                  href="{% if CurrentPage < TotalPage %}javascript:go_next_page('{{ Search }}', {{ CurrentPage }}){% else %}javascript:void(0){% endif %}">
+                  href="{% if CurrentPage < TotalPage %}javascript:go_next_page({{ Count }},'{{ Search }}', {{ CurrentPage }}){% else %}javascript:void(0){% endif %}">
+            <p class="m-0 text-muted">当前页 <span>{{ Count }}</span> 条</p>
+            <ul class="pagination m-0 ms-auto">
+              <li class="page-item {% if CurrentPage==1 %} disabled {% endif %}">
+                <a class="page-link" href="javascript:go_pre_page({{ Count }} ,'{{ Search }}', {{ CurrentPage }})" tabindex="-1"
+                  aria-disabled="true">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24"
+                    stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                    <polyline points="15 6 9 12 15 18" />
+                  </svg>
+                </a>
+              </li>
+              {% for page in PageRange %}
+              <li class="page-item {% if page==CurrentPage %} active {% endif %}">
+                <a class="page-link" href="javascript:navmenu('history?pagenum={{ Count }}&s={{ Search }}&page={{ page }}')">{{ page }}</a>
+              </li>
+              {% endfor %}
+              <li class="page-item {% if CurrentPage >= TotalPage %} disabled {% endif %}">
+                <a class="page-link"
+                  href="{% if CurrentPage < TotalPage %}javascript:go_next_page({{ Count }} ,'{{ Search }}', {{ CurrentPage }}){% else %}javascript:void(0){% endif %}">
                   <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24"
                     stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                     <path stroke="none" d="M0 0h24v24H0z" fill="none" />
@@ -455,7 +477,8 @@
   $('#search_word').bind('keypress', function (event) {
     if (event.keyCode == "13") {
       var keyword = $("#search_word").val();
-      navmenu("history?s=" + keyword);
+      var pagenum = $("#pagenum").val();
+      navmenu("history?pagenum=" + pagenum +"&s=" + keyword);
     }
   });
   //单选框事件
@@ -507,4 +530,13 @@
     var logids = [logid];
     re_identification(logids);
   }
+
+  //设置页面显示条数
+  $('#pagenum').bind('keypress', function (event) {
+    if (event.keyCode == "13") {
+      var keyword = $("#search_word").val();
+      var pagenum = $("#pagenum").val();
+      navmenu("history?pagenum=" + pagenum +"&s=" + keyword);
+    }
+  });
 </script>
